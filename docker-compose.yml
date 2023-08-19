@@ -5,15 +5,16 @@ services:
   php:
     build: 
       context: .
+      dockerfile: DockerFile
       target: php
       args:
         - APP_ENV=${APP_ENV}
     environment:
       - APP_ENV=${APP_ENV}
       - CONTAINER_ROLE=app
-    working_dir: /var/www
+    working_dir: /Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
     volumes:
-      - ./:/var/www
+      - ./:/Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
     ports:
       -    8000:8000
     depends_on:

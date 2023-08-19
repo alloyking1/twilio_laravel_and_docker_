@@ -8,10 +8,14 @@ RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis
 
-WORKDIR /var/www
+WORKDIR /Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
 COPY . .
 
 COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
+COPY Docker/entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
 
 ENV PORT=8000
-ENTRYPOINT [ "docker/entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
+
