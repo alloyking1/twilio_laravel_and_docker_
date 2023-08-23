@@ -19,3 +19,14 @@ RUN chmod +x /entrypoint.sh
 ENV PORT=8000
 ENTRYPOINT [ "/entrypoint.sh" ]
 
+#=======================================================
+#node
+FROM node:14-alpine as node
+
+WORKDIR /Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
+COPY . .
+
+RUN npm install --global cross-env
+RUN npm install
+
+VOLUME /Users/moses/Projects/twilio_articles/twilio_docker_laravel_app/node_modules
