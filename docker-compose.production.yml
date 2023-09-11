@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+
+  # php service
+  php:
+    build: 
+      context: .
+      dockerfile: DockerFile
+      target: php
+      args:
+        - APP_ENV=${APP_ENV}
+    environment:
+      - APP_ENV=${APP_ENV}
+      - CONTAINER_ROLE=app
+    working_dir: /Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
+    volumes:
+      - ./:/Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
+    ports:
+      -    8000:8000
+    depends_on:
+      - database
+      - redis
+
+  # database server
+  database:
+    image: mysql:8.0
+    ports:
+      -     3306:3306
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      # - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD='YES'
+    volumes:
+      - db-data:/Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
+  
+  # Redis Server
+  redis:
+    image: redis:alpine
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
+    ports:
+      - 6379:3679
+
+  # node
+  node:
+    build: 
+      context: .
+      dockerfile: DockerFile
+      target: node
+    volumes:
+      - .:/Users/moses/Projects/twilio_articles/twilio_docker_laravel_app
+      - ./node_modules:/Users/moses/Projects/twilio_articles/twilio_docker_laravel_app/node_modules
+    tty: true
+
+volumes:
+  db-data: ~
